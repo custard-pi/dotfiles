@@ -33,8 +33,19 @@ AppData/
 .config/fontconfig
 {{- end}}
 
+{{- if (not (lookPath "nvim"))}}
+.config/nvim
+{{- end}}
+
 {{- if (not (lookPath "vlc"))}}
 .config/vlc
 {{- end}}
 
+{{- if (not (lookPath "yazi"))}}
+.config/yazi
+{{- end}}
+
+{{- if (not (lookPath "zellij"))}}
+.config/zellij
+{{- end}}
 
