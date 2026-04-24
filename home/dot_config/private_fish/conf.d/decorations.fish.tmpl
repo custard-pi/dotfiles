@@ -3,7 +3,7 @@ function fish_greeting
     set -l normal (set_color normal)
 
     # [Time] [Shell] on [Distro] @ [Device]
-    echo -n (date "+%a %-d %b %H:%M")" "
+    echo -n (env LC_TIME=en_US.UTF-8 date "+%a %-d %b %H:%M")" "
     echo -n $cyan"fish "$normal"on "
     echo -n $cyan"{{ .machine.osid }} "$normal"@"
     echo " {{ .machine.hostname }}" 
