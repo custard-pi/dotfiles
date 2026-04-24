@@ -1,0 +1,86 @@
+#!/bin/sh
+
+awk '
+BEGIN {
+    targetProfileName = "Flat Style"
+    targetProfileValue = "\"0|10-5;19-5;20-5;13-5;65-5;3-5;5-5;32-5;16-5;0-7;17-5;32-5;6-5;4-5;65-5;11-5;14-5;36-5;7-5;|||43-5;33-1;42-5;44-5;|10-5;19-5;20-5;13-5;65-5;3-5;5-5;16-5;0-7;17-5;6-5;4-5;65-5;11-5;14-5;36-5;8-5;\""
+}
+
+{
+    line = $0
+
+    if (line ~ /^AdvToolbar=/) {
+        line = "AdvToolbar="
+    } else if (line ~ /^FSCtoolbar=/) {
+        line = "FSCtoolbar=\"10-5;19-5;20-5;13-5;65-5;3-5;5-5;16-5;0-7;17-5;6-5;4-5;65-5;11-5;14-5;36-5;8-5;\""
+    } else if (line ~ /^InputToolbar=/) {
+        line = "InputToolbar=\"43-5;33-1;42-5;44-5;\""
+    } else if (line ~ /^MainToolbar1=/) {
+        line = "MainToolbar1=\"10-5;19-5;20-5;13-5;65-5;3-5;5-5;32-5;16-5;0-7;17-5;32-5;6-5;4-5;65-5;11-5;14-5;36-5;7-5;\""
+    } else if (line ~ /^MainToolbar2=/) {
+        line = "MainToolbar2="
+    } else if (line ~ /^ToolbarPos=/) {
+        line = "ToolbarPos=false"
+    }
+
+    n++
+    lines[n] = line
+
+    if (line ~ /^[0-9]+\\ProfileName=/) {
+        split(line, kv, "=")
+        key = kv[1]
+        sub(/\\ProfileName$/, "", key)
+        idx = key + 0
+        nameByIdx[idx] = substr(line, length(kv[1]) + 2)
+        if (idx > maxIdx) {
+            maxIdx = idx
+        }
+    } else if (line ~ /^[0-9]+\\Value=/) {
+        split(line, kv, "=")
+        key = kv[1]
+        sub(/\\Value$/, "", key)
+        idx = key + 0
+        valueByIdx[idx] = substr(line, length(kv[1]) + 2)
+        if (idx > maxIdx) {
+            maxIdx = idx
+        }
+    } else if (line ~ /^size=[0-9]+[[:space:]]*$/) {
+        sizeLineNo = n
+        sizeValue = substr(line, 6) + 0
+    }
+}
+
+END {
+    for (idx in nameByIdx) {
+        if (nameByIdx[idx] == targetProfileName && valueByIdx[idx] == targetProfileValue) {
+            hasTargetProfile = 1
+            break
+        }
+    }
+
+    if (sizeLineNo > 0) {
+        finalSize = sizeValue
+    }
+
+    if (!hasTargetProfile) {
+        newIdx = maxIdx + 1
+        finalSize = newIdx
+    } else if (sizeLineNo == 0) {
+        finalSize = maxIdx
+    }
+
+    for (i = 1; i <= n; i++) {
+        if (i == sizeLineNo) {
+            continue
+        }
+        print lines[i]
+    }
+
+    if (!hasTargetProfile) {
+        print newIdx "\\ProfileName=" targetProfileName
+        print newIdx "\\Value=" targetProfileValue
+    }
+
+    print "size=" finalSize
+}
+'

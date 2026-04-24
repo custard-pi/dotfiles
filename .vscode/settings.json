@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "*.yaml.tmpl": "yaml",
+        "*.toml.tmpl": "toml",
+        "*.sh.tmpl": "shellscript",
+        "*.fish.tmpl": "shellscript",
+        "*.ini.tmpl": "ini",
+        "*.conf.tmpl": "properties",
+        "*.ps1.tmpl": "powershell",
+        "*.bat.tmpl": "bat",
+        "*.cmd.tmpl": "bat"
+    }
+}

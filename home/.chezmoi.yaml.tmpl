@@ -1,0 +1,68 @@
+{{- $userData := get . "user" | default (dict) -}}
+{{- $machineData := get . "machine" | default (dict) -}}
+{{- $osid := .chezmoi.os -}}
+{{- $prefix := env "PREFIX" -}}
+{{- $isTermux := and (eq .chezmoi.os "android") (regexMatch `(^|/)com\.termux(/|$)|/data/data/com\.termux/` $prefix) -}}
+{{- $isWsl := false -}}
+
+{{- if $isTermux -}}
+{{- $osid = "termux" -}}
+{{- else if eq .chezmoi.os "linux" -}}
+{{- $osid = .chezmoi.osRelease.id -}}
+{{- $kernelRelease := .chezmoi.kernel.osrelease -}}
+{{- $wslDistro := env "WSL_DISTRO_NAME" -}}
+{{- $isWsl = and (eq .chezmoi.os "linux") (or (ne $wslDistro "") (regexMatch `(?i)microsoft|wsl` $kernelRelease)) -}}
+{{- end -}}
+
+{{- $gitName := promptStringOnce $userData "git_name" "git username" "" -}}
+{{- $gitEmail := promptStringOnce $userData "git_email" "git email" "" -}}
+{{- $chassisType := promptChoiceOnce $machineData "chassis_type" "Chassis type" (list "desktop" "laptop" "server" "phone" "tablet") "desktop" -}}
+{{- $ownership := promptChoiceOnce $machineData "ownership" "Ownership" (list "personal" "company") "personal" -}}
+{{- $machineShared := promptBoolOnce $machineData "shared" "Shared with others?" false -}}
+{{- $canUseSystemPackageManager := promptBoolOnce $machineData "sys_pm_access" "System package manager access?" true -}}
+
+{{- $hostname := .chezmoi.hostname -}}
+{{- $username := .chezmoi.username -}}
+{{- if $isTermux -}}
+{{- $hostname = promptStringOnce $machineData "termux_hostname" "Termux greeting hostname" $hostname -}}
+{{- $username = promptStringOnce $machineData "termux_username" "Termux greeting username" $username -}}
+{{- end -}}
+
+{{- $rawDesktopEnvironment := lower (default "" (coalesce (env "XDG_CURRENT_DESKTOP") (env "DESKTOP_SESSION"))) -}}
+{{- $detectedDesktopEnvironment := "none" -}}
+{{- if regexMatch `gnome` $rawDesktopEnvironment -}}
+{{- $detectedDesktopEnvironment = "gnome" -}}
+{{- else if regexMatch `xfce` $rawDesktopEnvironment -}}
+{{- $detectedDesktopEnvironment = "xfce" -}}
+{{- else if regexMatch `sway` $rawDesktopEnvironment -}}
+{{- $detectedDesktopEnvironment = "sway" -}}
+{{- else if regexMatch `kde|plasma` $rawDesktopEnvironment -}}
+{{- $detectedDesktopEnvironment = "kde" -}}
+{{- else if regexMatch `hypr` $rawDesktopEnvironment -}}
+{{- $detectedDesktopEnvironment = "hyprland" -}}
+{{- end -}}
+{{- $desktopEnvironment := "none" -}}
+{{- $manageDesktopEnvironment := or (eq .chezmoi.os "linux") $isTermux -}}
+{{- $headless := false -}}
+{{- if and $manageDesktopEnvironment (eq $chassisType "server") (eq $detectedDesktopEnvironment "none") -}}
+{{- $headless = promptBoolOnce $machineData "headless" "Headless server" true -}}
+{{- end -}}
+{{- if and $manageDesktopEnvironment (not $headless) -}}
+{{- $desktopEnvironment = promptChoiceOnce $machineData "desktop_environment" "Desktop environment" (list "gnome" "xfce" "sway" "kde" "hyprland" "none") $detectedDesktopEnvironment -}}
+{{- end -}}
+
+data:
+  user:
+    git_name: {{ $gitName | quote }}
+    git_email: {{ $gitEmail | quote }}
+  machine:
+    chassis_type: {{ $chassisType | quote }}
+    ownership: {{ $ownership | quote }}
+    shared: {{ $machineShared }}
+    sys_pm_access: {{ $canUseSystemPackageManager }}
+    wsl: {{ $isWsl }}
+    osid: {{ $osid | quote }}
+    hostname: {{ $hostname | quote }}
+    username: {{ $username | quote}}
+    headless: {{ $headless }}
+    desktop_environment: {{ $desktopEnvironment | quote }}

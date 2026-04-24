@@ -1,0 +1,19 @@
+<eui>
+  <headerbar id='main-headerbar'>
+    <start>
+      <item action='EShellView::new-menu' label_priority='999999'/>
+      </start>
+    <end>
+      <item action='calendar-view-year' important='true'/>
+      <item action='calendar-view-month' important='true'/>
+      <item action='calendar-view-week' important='true'/>
+      <item action='calendar-view-workweek' important='true'/>
+      <item action='calendar-view-day' important='true'/>
+      <separator/>
+      <item action='calendar-view-list' important='true'/>
+      <separator/>
+      <item action='ECalShellView::navigation-buttons'/>
+      <item action='EShellView::menu-button'/>
+      </end>
+    </headerbar>
+  </eui>

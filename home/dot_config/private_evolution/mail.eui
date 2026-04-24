@@ -1,0 +1,13 @@
+<eui>
+  <toolbar id='main-toolbar-with-headerbar' primary='true'/>
+  <toolbar id='mail-preview-toolbar'>
+    <item action='mail-previous'/>
+    <item action='mail-next'/>
+    <separator/>
+    <item action='mail-delete'/>
+    <item action='mail-mark-junk'/>
+    <item action='mail-mark-notjunk'/>
+    <separator/>
+    <item action='mail-archive'/>
+    </toolbar>
+  </eui>
