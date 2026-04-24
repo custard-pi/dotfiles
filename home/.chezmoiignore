@@ -1,15 +1,40 @@
-{{ if ne .chezmoi.os "darwin" }}
+# macOS configs
+{{- if ne .chezmoi.os "darwin" }}
 Library/
-{{ end }}
+{{- end }}
 
-{{ if ne .chezmoi.os "windows" }}
+# Windows configs 
+{{- if ne .chezmoi.os "windows" }}
 AppData/
-{{ end }}
+{{- end }}
 
-{{ if ne .chezmoi.os "linux" }}
-.config/
-{{ end }}
+# common things to ignore
+**/.DS_Store
+**/.AppleDouble
+**/Thumbs.db
+**/node_modules/
+**/README.md
+**/LICENSE*
+**/COPYING*
+**/NOTICE*
+**/AUTHORS*
 
-{{ if eq .chezmoi.os "darwin" }}
+# Application specific configs
+{{- if (not (lookPath "evolution")) }}
+.config/evolution
+{{- end }}
 
-{{ end }}
+{{- if (not (lookPath "fish"))}}
+.config/fish
+{{- end}}
+
+# only apply fontconfig to linux
+{{- if (not (and (lookPath "fc") (eq .machine.headless false) (or (eq .chezmoi.os "linux") (eq .machine.osid "termux"))))}}
+.config/fontconfig
+{{- end}}
+
+{{- if (not (lookPath "vlc"))}}
+.config/vlc
+{{- end}}
+
+
