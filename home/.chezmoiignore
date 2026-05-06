@@ -33,6 +33,13 @@ AppData/
 .config/fontconfig
 {{- end}}
 
+{{- if (or (not (lookPath "mcfly")) (ne .chezmoi.os "darwin")) }}
+Library/Application Support/McFly
+{{- end}}
+{{- if (or (not (lookPath "mcfly")) (eq .chezmoi.os "darwin")) }}
+.local/share/mcfly
+{{- end}}
+
 {{- if (not (lookPath "nvim"))}}
 .config/nvim
 {{- end}}

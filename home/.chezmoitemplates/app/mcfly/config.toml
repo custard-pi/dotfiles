@@ -1,0 +1,27 @@
+[colors]
+
+[colors.menubar]
+fg = 'black'
+bg = 'grey'
+
+[colors.darkmode]
+prompt = 'green'
+timing = 'green'
+
+results_fg = 'white'
+results_hl = 'red'
+
+results_selection_fg = 'white'
+results_selection_bg = 'dark_grey'
+results_selection_hl = 'red'
+
+[colors.lightmode]
+prompt = 'green'
+timing = 'dark_green'
+
+results_fg = 'black'
+results_hl = 'red'
+
+results_selection_fg = 'black'
+results_selection_bg = 'grey'
+results_selection_hl = 'red'
