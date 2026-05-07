@@ -1,10 +1,13 @@
 # Replace ls with eza
 if command -v eza >/dev/null
-    alias ls='eza --color=auto --group-directories-first --icons=auto' # preferred listing
-    alias la='eza -a --color=auto --group-directories-first --icons=auto' # all files and dirs
-    alias ll='eza -l --color=auto --group-directories-first --icons=auto' # long format
-    alias lt='eza -aT --color=auto --group-directories-first --icons=auto' # tree listing
-    alias l.="eza -a | grep -e '^\.'" # show only dotfiles
+    alias l='eza -bF --color=auto --group-directories-first --icons=auto' # preferred listing
+    alias la='eza -abF --color=auto --group-directories-first --icons=auto' # All files and dirs
+    alias ll='eza -lGbF --git --color=auto --group-directories-first --icons=auto' # Long format
+    alias llm='eza -lGbF --git --sort=modified -r' # sort by date Modified
+    alias lt='eza -aTb --color=auto --group-directories-first --icons=auto' # Tree listing
+    alias l.="eza -ab | grep -e '^\.'" # show only DOTfiles
+    alias lx='eza -lbhHigUmuSa --time-style=long-iso --git --color-scale' # show eXtra info
+    alias lX='eza -lbhHigUmuSa@ --time-style=long-iso --git --color-scale' # show even more eXtra info
 end
 
 # Replace cat with bat
