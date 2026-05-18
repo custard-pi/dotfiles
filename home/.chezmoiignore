@@ -44,6 +44,10 @@ Library/Application Support/McFly
 .config/nvim
 {{- end}}
 
+{{- if (not (lookPath "tmux"))}}
+.config/tmux
+{{- end}}
+
 {{- if (not (lookPath "vlc"))}}
 .config/vlc
 {{- end}}
