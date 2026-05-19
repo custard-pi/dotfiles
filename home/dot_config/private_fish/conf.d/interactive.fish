@@ -18,6 +18,11 @@ if status is-interactive
         set -gx MCFLY_PROMPT "❯"
     end
 
+    # nvim
+    if command -v nvim >/dev/null
+        set -gx EDITOR nvim
+    end
+
     # starship
     if command -v starship >/dev/null
         starship init fish | source
