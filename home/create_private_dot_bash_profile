@@ -1,0 +1,16 @@
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+if [ -d ~/.config/bash/profile ]; then
+  for profile in ~/.config/bash/profile/*.sh; do
+    if [ -f "$profile" ]; then
+      . "$profile"
+    fi
+  done
+fi
+unset profile

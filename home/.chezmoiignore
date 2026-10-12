@@ -20,6 +20,12 @@ AppData/
 **/AUTHORS*
 
 # Application specific configs
+{{- if (not (lookPath "bash"))}}
+.config/bash
+.bashrc
+.bash_profile
+{{- end}}
+
 {{- if (not (lookPath "evolution")) }}
 .config/evolution
 {{- end }}

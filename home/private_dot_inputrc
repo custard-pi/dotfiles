@@ -1,0 +1,11 @@
+set editing-mode vi
+set keymap vi-insert
+
+set show-mode-in-prompt on
+set vi-ins-mode-string ""
+set vi-cmd-mode-string "(N) "
+
+set completion-ignore-case on
+set show-all-if-ambiguous on
+set colored-stats on
+set completion-map-case on
