@@ -1,0 +1,6 @@
+[shell]
+disabled = false
+fish_indicator = ''
+unknown_indicator = 'unk'
+format = '[$indicator]($style)'
+style = 'bold yellow'
