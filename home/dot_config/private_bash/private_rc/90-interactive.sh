@@ -26,6 +26,11 @@ shopt -s autocd
 shopt -s globstar
 shopt -s dirspell
 
+# direnv
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook bash)"
+fi
+
 # Starship for interactive Bash
 if command -v starship >/dev/null 2>&1; then
   eval "$(starship init bash)"

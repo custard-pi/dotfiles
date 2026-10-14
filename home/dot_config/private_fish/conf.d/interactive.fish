@@ -6,6 +6,11 @@ if status is-interactive
     fish_vi_key_bindings
 
     # applications
+    # direnv
+    if command -v direnv >/dev/null
+        direnv hook fish | source
+    end
+
     # fzf (disable Ctrl+R to use mcfly for history search)
     if command -v fzf >/dev/null
         fzf --fish | FZF_CTRL_R_COMMAND= source
