@@ -1,0 +1,17 @@
+{{- if and (eq .chezmoi.os "linux") (not .machine.sys_pm_access) -}}
+#!/usr/bin/env bash
+set -euo pipefail
+personal_root={{ .machine.personal_dest | shellQuote }}
+export XDG_CONFIG_HOME=$personal_root/.config
+export XDG_DATA_HOME=$personal_root/.local/share
+export XDG_STATE_HOME=$personal_root/.local/state
+export XDG_CACHE_HOME=$personal_root/.cache
+export MISE_CONFIG_DIR=$XDG_CONFIG_HOME/mise
+export MISE_GLOBAL_CONFIG_ROOT=$personal_root
+{{ if .machine.shared_user -}}
+export MISE_CEILING_PATHS=$(dirname -- "$personal_root")
+{{ end -}}
+export PATH="$personal_root/.local/bin:$PATH"
+cd -- "$personal_root"
+"$personal_root/.local/bin/mise" install
+{{- end }}

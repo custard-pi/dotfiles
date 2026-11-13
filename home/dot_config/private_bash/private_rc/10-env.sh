@@ -11,6 +11,11 @@ esac
 export PATH
 unset personal_bin_root
 
+# Activate personal tool versions before interactive hooks look for them.
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash)"
+fi
+
 # Atuin keeps history data and configuration in the XDG directories.
 if command -v atuin >/dev/null 2>&1; then
   export ATUIN_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/atuin"

@@ -1,0 +1,19 @@
+{{- if .machine.sys_pm_access -}}
+#!/usr/bin/env bash
+set -euo pipefail
+{{ if eq .machine.osid "fedora" -}}
+packages=(atuin fzf neovim tmux fish yazi lazygit starship direnv)
+if (( EUID == 0 )); then
+  dnf install -y "${packages[@]}"
+else
+  sudo dnf install -y "${packages[@]}"
+fi
+install_path={{ joinPath .machine.personal_dest ".local/bin/mise" | shellQuote }}
+if [[ ! -x $install_path ]]; then
+  mkdir -p -- "$(dirname -- "$install_path")"
+  curl -fsSL https://mise.run | MISE_INSTALL_PATH="$install_path" sh
+fi
+{{ else -}}
+printf 'Warning: native package installation is not configured for %s; skipping.\n' {{ .machine.osid | shellQuote }} >&2
+{{ end -}}
+{{- end }}

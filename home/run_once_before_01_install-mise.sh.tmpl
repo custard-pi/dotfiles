@@ -1,0 +1,9 @@
+{{- if and (eq .chezmoi.os "linux") (not .machine.sys_pm_access) -}}
+#!/usr/bin/env bash
+set -euo pipefail
+install_path={{ joinPath .machine.personal_dest ".local/bin/mise" | shellQuote }}
+if [[ ! -x $install_path ]]; then
+  mkdir -p -- "$(dirname -- "$install_path")"
+  curl -fsSL https://mise.run | MISE_INSTALL_PATH="$install_path" sh
+fi
+{{- end }}

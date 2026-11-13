@@ -1,0 +1,13 @@
+# Tools managed in the personal environment. Machine overrides go in mise.local.toml.
+{{ if not .machine.sys_pm_access -}}
+[tools]
+atuin = "latest"
+fzf = "latest"
+"aqua:neovim/neovim" = "latest"
+tmux = "latest"
+"conda:fish" = "latest"
+yazi = "latest"
+lazygit = "latest"
+starship = "latest"
+direnv = "latest"
+{{ end -}}

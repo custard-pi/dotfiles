@@ -1,3 +1,15 @@
+# Activate personal tool versions before interactive hooks look for them.
+set -l personal_bin_root $HOME
+if set -q PERSONAL_ENV_HOME; and test -n "$PERSONAL_ENV_HOME"
+    set personal_bin_root $PERSONAL_ENV_HOME
+end
+if not contains -- "$personal_bin_root/.local/bin" $PATH
+    set -gx PATH "$personal_bin_root/.local/bin" $PATH
+end
+if command -v mise >/dev/null
+    mise activate fish | source
+end
+
 # Atuin keeps history data and configuration in the XDG directories.
 if command -v atuin >/dev/null
     set -l atuin_data_home $HOME/.local/share
