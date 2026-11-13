@@ -6,21 +6,19 @@ if status is-interactive
     fish_vi_key_bindings
 
     # applications
+    # atuin
+    if command -v atuin >/dev/null
+        atuin init fish --disable-up-arrow | source
+    end
+
     # direnv
     if command -v direnv >/dev/null
         direnv hook fish | source
     end
 
-    # fzf (disable Ctrl+R to use mcfly for history search)
+    # fzf (leave Ctrl+R to Atuin)
     if command -v fzf >/dev/null
         fzf --fish | FZF_CTRL_R_COMMAND= source
-    end
-
-    # mcfly
-    if command -v mcfly >/dev/null
-        mcfly init fish | source
-        set -gx MCFLY_INTERFACE_VIEW BOTTOM
-        set -gx MCFLY_PROMPT "❯"
     end
 
     # nvim

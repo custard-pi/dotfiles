@@ -26,12 +26,29 @@ shopt -s autocd
 shopt -s globstar
 shopt -s dirspell
 
+# applications
+# Starship initializes before Atuin so its prompt still works with older
+# Atuin versions that do not provide a Bash preexec backend.
+if command -v starship >/dev/null 2>&1; then
+  eval "$(starship init bash)"
+fi
+
+# atuin
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init bash --disable-up-arrow)"
+fi
+
 # direnv
 if command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook bash)"
 fi
 
-# Starship for interactive Bash
-if command -v starship >/dev/null 2>&1; then
-  eval "$(starship init bash)"
+# fzf (leave Ctrl+R to Atuin)
+if command -v fzf >/dev/null 2>&1; then
+  FZF_CTRL_R_COMMAND= eval "$(fzf --bash)"
+fi
+
+# nvim
+if command -v nvim >/dev/null 2>&1; then
+  export EDITOR=nvim
 fi
