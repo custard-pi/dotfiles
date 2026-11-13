@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -e
+
+# Select the personal config even if the shared HOME has a ~/.tmux.conf.
+if [[ -z ${PERSONAL_ENV_HOME:-} || -z ${XDG_CONFIG_HOME:-} ]]; then
+  printf 'tmux: enter the personal environment first\n' >&2
+  exit 1
+fi
+
+wrapper_dir=$(cd -P -- "$(dirname -- "$0")" && pwd)
+IFS=: read -r -a path_dirs <<< "$PATH"
+for path_dir in "${path_dirs[@]}"; do
+  [[ -n $path_dir && -x $path_dir/tmux ]] || continue
+  candidate_dir=$(cd -P -- "$path_dir" && pwd)
+  if [[ $candidate_dir != "$wrapper_dir" ]]; then
+    exec "$path_dir/tmux" -f "$XDG_CONFIG_HOME/tmux/tmux.conf" "$@"
+  fi
+done
+
+printf 'tmux: executable not found outside %s\n' "$wrapper_dir" >&2
+exit 127

@@ -20,6 +20,11 @@ AppData/
 **/AUTHORS*
 
 # Application specific configs
+{{- if not (get .machine "shared_user" | default false) }}
+.local/bin/enter-personal
+.local/bin/wrappers/tmux
+{{- end }}
+
 {{- if (not (lookPath "bash"))}}
 .config/bash
 .bashrc

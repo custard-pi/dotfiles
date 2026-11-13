@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+set -e
+
+case ${1:-} in
+  '')
+    if command -v fish >/dev/null 2>&1; then
+      personal_shell=fish
+    else
+      personal_shell=bash
+    fi
+    ;;
+  bash|fish)
+    personal_shell=$1
+    ;;
+  *)
+    printf 'Usage: %s [bash|fish]\n' "$0" >&2
+    exit 2
+    ;;
+esac
+
+if ! command -v "$personal_shell" >/dev/null 2>&1; then
+  printf 'enter-personal: %s is not installed\n' "$personal_shell" >&2
+  exit 1
+fi
+
+script_path=$0
+case $script_path in
+  */*) ;;
+  *) script_path=$(command -v -- "$script_path") ;;
+esac
+personal_root=$(cd -P -- "$(dirname -- "$script_path")/../.." && pwd)
+
+if [ ! -f "$personal_root/.config/chezmoi/chezmoi.yaml" ]; then
+  printf 'enter-personal: missing %s/.config/chezmoi/chezmoi.yaml\n' "$personal_root" >&2
+  printf 'Run: chezmoi -S %q init --config-path %q\n' \
+    "$personal_root/.local/share/chezmoi" \
+    "$personal_root/.config/chezmoi/chezmoi.yaml" >&2
+  exit 1
+fi
+
+export PERSONAL_ENV_HOME=$personal_root
+export XDG_CONFIG_HOME=$personal_root/.config
+export XDG_DATA_HOME=$personal_root/.local/share
+export XDG_STATE_HOME=$personal_root/.local/state
+export XDG_CACHE_HOME=$personal_root/.cache
+export GIT_CONFIG_GLOBAL=$XDG_CONFIG_HOME/git/config
+export PATH=$personal_root/.local/bin/wrappers:$personal_root/.local/bin:$personal_root/bin:$PATH
+export TMUX_TMPDIR=$personal_root/.local/state/tmux
+mkdir -p -m 700 -- "$TMUX_TMPDIR"
+unset TMUX TMUX_PANE
+
+case $personal_shell in
+  fish) exec fish -i ;;
+  bash) exec bash --rcfile "$personal_root/.bashrc" -i ;;
+esac

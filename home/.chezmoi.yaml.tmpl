@@ -1,4 +1,5 @@
-{{- $userData := get . "user" | default (dict) -}}
+# vim: ft=yaml
+{{ $userData := get . "user" | default (dict) -}}
 {{- $machineData := get . "machine" | default (dict) -}}
 {{- $osid := .chezmoi.os -}}
 {{- $prefix := env "PREFIX" -}}
@@ -14,12 +15,18 @@
 {{- $isWsl = and (eq .chezmoi.os "linux") (or (ne $wslDistro "") (regexMatch `(?i)microsoft|wsl` $kernelRelease)) -}}
 {{- end -}}
 
-{{- $gitName := promptStringOnce $userData "git_name" "git username" "" -}}
-{{- $gitEmail := promptStringOnce $userData "git_email" "git email" "" -}}
+{{- $gitName := promptStringOnce $userData "git_name" "git username" "custard-pi" -}}
+{{- $gitEmail := promptStringOnce $userData "git_email" "git email" "36961256+custard-pi@users.noreply.github.com" -}}
+
 {{- $chassisType := promptChoiceOnce $machineData "chassis_type" "Chassis type" (list "desktop" "laptop" "server" "phone" "tablet") "desktop" -}}
 {{- $ownership := promptChoiceOnce $machineData "ownership" "Ownership" (list "personal" "company") "personal" -}}
-{{- $machineShared := promptBoolOnce $machineData "shared" "Shared with others?" false -}}
-{{- $canUseSystemPackageManager := promptBoolOnce $machineData "sys_pm_access" "System package manager access?" true -}}
+{{- $canUseSystemPackageManager := promptBoolOnce $machineData "sys_pm_access" "System package manager access" true -}}
+
+{{- $userShared := promptBoolOnce $machineData "shared_user" "User shared with others" false -}}
+{{- $personalDest := (env "HOME") -}}
+{{- if $userShared -}}
+{{- $personalDest = promptStringOnce $machineData "personal_dest" "Absolute directory to apply your config" (env "HOME") -}}
+{{- end -}}
 
 {{- $hostname := .chezmoi.hostname -}}
 {{- $username := .chezmoi.username -}}
@@ -58,8 +65,9 @@ data:
   machine:
     chassis_type: {{ $chassisType | quote }}
     ownership: {{ $ownership | quote }}
-    shared: {{ $machineShared }}
     sys_pm_access: {{ $canUseSystemPackageManager }}
+    shared_user: {{ $userShared }}
+    personal_dest: {{ $personalDest | quote }}
     wsl: {{ $isWsl }}
     osid: {{ $osid | quote }}
     hostname: {{ $hostname | quote }}
@@ -67,7 +75,12 @@ data:
     headless: {{ $headless }}
     desktop_environment: {{ $desktopEnvironment | quote }}
 
-{{- if lookPath "fish" }}
+{{ if $userShared }}
+sourceDir: {{ joinPath $personalDest ".local/share/chezmoi" | quote }}
+destDir: {{ $personalDest | quote }}
+{{ end }}
+
+{{ if lookPath "fish" }}
 cd:
   command: fish
-{{- end }}
+{{ end }}

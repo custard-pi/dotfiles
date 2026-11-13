@@ -1,13 +1,13 @@
 # .bash_profile
 
 # Get the aliases and functions
-if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
+if [ -f "${PERSONAL_ENV_HOME:-$HOME}/.bashrc" ]; then
+    . "${PERSONAL_ENV_HOME:-$HOME}/.bashrc"
 fi
 
 # User specific environment and startup programs
-if [ -d ~/.config/bash/profile ]; then
-  for profile in ~/.config/bash/profile/*.sh; do
+if [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/bash/profile" ]; then
+  for profile in "${XDG_CONFIG_HOME:-$HOME/.config}"/bash/profile/*.sh; do
     if [ -f "$profile" ]; then
       . "$profile"
     fi

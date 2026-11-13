@@ -2,7 +2,7 @@
 [[ $- == *i* ]] || return 0
 
 # Switch to Fish for interactive SSH sessions if bash is login shell
-if [[ -n ${SSH_TTY:-} && ${SHELL##*/} == bash && -z ${__AUTO_FISH_DONE_9DADEA76D94D:-} ]] &&
+if [[ -z ${PERSONAL_ENV_HOME:-} && -n ${SSH_TTY:-} && ${SHELL##*/} == bash && -z ${__AUTO_FISH_DONE_9DADEA76D94D:-} ]] &&
   command -v fish &>/dev/null; then
   __AUTO_FISH_DONE_9DADEA76D94D=1 exec fish
 fi

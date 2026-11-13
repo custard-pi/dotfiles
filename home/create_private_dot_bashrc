@@ -6,8 +6,8 @@ if [ -f /etc/bashrc ]; then
 fi
 
 # User specific aliases and functions
-if [ -d ~/.config/bash/rc ]; then
-  for rc in ~/.config/bash/rc/*.sh; do
+if [ -d "${XDG_CONFIG_HOME:-$HOME/.config}/bash/rc" ]; then
+  for rc in "${XDG_CONFIG_HOME:-$HOME/.config}"/bash/rc/*.sh; do
     if [ -f "$rc" ]; then
       . "$rc"
     fi
